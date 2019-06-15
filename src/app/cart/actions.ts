@@ -1,11 +1,11 @@
 import { Action, createAction, props } from '@ngrx/store';
 
-export const addItemSuccess = createAction(
-  '[Cart API] add one item success',
+export const addItemSuccess = createAction('[Cart API] add one item success');
+
+export const addItemError = createAction(
+  '[Cart API] add one item error',
   props<{ itemId: string }>()
 );
-
-export const addItemError = createAction('[Cart API] add one item error');
 
 export const FETCH_CART_ITEMS = '[Cart Effect] fetch items';
 export class FetchCartItems implements Action {

@@ -47,8 +47,9 @@ export class CartEffects {
     ofType(productDetailsActions.addItem),
     concatMap(({ itemId }) =>
       this.cartService.addToCart(itemId).pipe(
-        map(() => cartActions.addItemSuccess({itemId})),
-        catchError(() => of(cartActions.addItemError()))
+        map(() => cartActions.addItemSuccess()),
+        // passing the itemId to the Error, so it can be restored.
+        catchError(() => of(cartActions.addItemError({itemId})))
       )
     )
   ));

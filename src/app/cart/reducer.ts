@@ -19,15 +19,20 @@ export const initState: CartState = {
 export function reducer(
   state: CartState = initState,
   action: actions.All | productDetailsActions.All | cartDetailsActions.All |
-  ReturnType<typeof actions.addItemSuccess|typeof actions.addItemError>
+  ReturnType<typeof productDetailsActions.addItem|typeof actions.addItemError>
 ): CartState {
   switch (action.type) {
-    case actions.addItemSuccess.type: {
+    case productDetailsActions.addItem.type: {
       const newCartItemsIds = [...state.cartItemsIds, action.itemId];
       return { cartItemsIds: newCartItemsIds };
     }
     case actions.addItemError.type: {
-      return state;
+      const indexOfItemId = state.cartItemsIds.indexOf(action.itemId);
+      // Remove the element.
+      state.cartItemsIds.splice(indexOfItemId, 1);
+      // Force array to mutate.
+      const newCartItemsIds = [...state.cartItemsIds];
+      return { cartItemsIds: newCartItemsIds };
     }
     case cartDetailsActions.REMOVE_ITEM: {
       const indexOfItemId = state.cartItemsIds.indexOf(action.itemId);
