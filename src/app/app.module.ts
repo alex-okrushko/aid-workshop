@@ -18,6 +18,7 @@ import { reducer } from './reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './effects';
 import { RatingModule } from './rating/rating.module';
+import { productSync } from './product-sync';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,7 @@ import { RatingModule } from './rating/rating.module';
     MatIconModule,
     MatToolbarModule,
     MatSnackBarModule,
-    StoreModule.forRoot({ product: reducer }),
+    StoreModule.forRoot({ product: reducer }, {metaReducers: [productSync]}),
     EffectsModule.forRoot([ProductEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 50 }),
     RatingModule,
