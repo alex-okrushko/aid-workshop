@@ -24,7 +24,7 @@ export class ProductEffects {
       withLatestFrom(this.store.select(selectors.getCurrentProductId)),
       switchMap(([action, id]) =>
         this.productService.getProduct(id).pipe(
-          map(product => new actions.FetchProductSuccess(product)),
+          map(product => actions.fetchProductSuccess({product})),
           catchError(() => of(new actions.FetchProductError()))
         )
       )

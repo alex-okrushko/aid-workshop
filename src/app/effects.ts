@@ -1,4 +1,4 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
@@ -12,25 +12,23 @@ import { MatSnackBar } from '@angular/material';
 @Injectable()
 export class ProductEffects {
   constructor(
-    private readonly actions$: Actions<homeActions.All | actions.All>,
+    private readonly actions$: Actions,
     private readonly productService: ProductService,
     private readonly snackBar: MatSnackBar
   ) {}
 
-  @Effect()
-  fetchProducts: Observable<Action> = this.actions$.pipe(
-    ofType(homeActions.FETCH_PRODUCTS),
+  fetchProducts = createEffect(() => this.actions$.pipe(
+    ofType(homeActions.fetchProducts),
     switchMap(() =>
       this.productService.getProducts().pipe(
-        map(products => new actions.FetchProductsSuccess(products)),
-        catchError(() => of(new actions.FetchProductsError()))
+        map(products => actions.fetchProductsSuccess({products})),
+        catchError(() => of(actions.fetchProductsError()))
       )
     )
-  );
+  ));
 
-  @Effect({ dispatch: false })
-  handleFetchError = this.actions$.pipe(
-    ofType(actions.FETCH_PRODUCTS_ERROR),
+  handleFetchError = createEffect(() => this.actions$.pipe(
+    ofType(actions.fetchProductsError),
     map(() => {
       // Setting the timeout, so that angular would re-run change detection.
       setTimeout(
@@ -41,5 +39,5 @@ export class ProductEffects {
         0
       );
     })
-  );
+  ), { dispatch: false });
 }

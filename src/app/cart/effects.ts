@@ -1,4 +1,4 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { CartService } from '../services/cart.service';
 import { Action, Store } from '@ngrx/store';
 import { Observable, defer, of, timer } from 'rxjs';
@@ -43,17 +43,28 @@ export class CartEffects {
     )
   );
 
-  @Effect()
-  addCartItem: Observable<Action> = this.actions$.pipe(
-    ofType<productDetailsActions.AddItem>(productDetailsActions.ADD_ITEM),
+  addCartItem = createEffect(() => this.actions$.pipe(
+    ofType(productDetailsActions.addItem),
     concatMap(({ itemId }) =>
       this.cartService.addToCart(itemId).pipe(
-        map(() => new cartActions.AddItemSuccess()),
-        // passing the itemId to the Error, so it can be restored.
-        catchError(() => of(new cartActions.AddItemError(itemId)))
+        map(() => cartActions.addItemSuccess({itemId})),
+        catchError(() => of(cartActions.addItemError()))
       )
     )
-  );
+  ));
+
+  handleFetchError = createEffect(() => this.actions$.pipe(
+    ofType(cartActions.addItemError),
+    map(() => {
+      // Setting the timeout, so that angular would re-run change detection.
+      setTimeout(
+        () =>
+          this.snackBar.open('Could not add item to the cart', 'Error', {
+            duration: 2500,
+          }),
+        0
+      );
+    })), { dispatch: false });
 
   @Effect()
   removeCartItem: Observable<Action> = this.actions$.pipe(
@@ -118,21 +129,6 @@ export class CartEffects {
       setTimeout(
         () =>
           this.snackBar.open('Could not purchase items', 'Error', {
-            duration: 2500,
-          }),
-        0
-      );
-    })
-  );
-
-  @Effect({ dispatch: false })
-  handleFetchError = this.actions$.pipe(
-    ofType<cartActions.AddItemError>(cartActions.ADD_ITEM_ERROR),
-    map(() => {
-      // Setting the timeout, so that angular would re-run change detection.
-      setTimeout(
-        () =>
-          this.snackBar.open('Could not add item to the cart', 'Error', {
             duration: 2500,
           }),
         0

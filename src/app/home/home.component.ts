@@ -16,6 +16,6 @@ export class HomeComponent {
   loading$ = this.store.select(selectors.isProductsLoading);
 
   constructor(private readonly store: Store<GlobalState>) {
-    this.store.dispatch(new actions.FetchProducts());
+    this.store.dispatch(actions.fetchProducts());
   }
 }

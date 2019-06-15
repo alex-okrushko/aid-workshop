@@ -32,8 +32,8 @@ export class ProductDetailsComponent {
     this.store.dispatch(new actions.SetRating({ id, rating }));
   }
 
-  addToCart(productId: string) {
-    this.store.dispatch(new actions.AddItem(productId));
+  addToCart(itemId: string) {
+    this.store.dispatch(actions.addItem({itemId }));
   }
 
   back() {

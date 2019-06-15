@@ -2,6 +2,7 @@ import * as actions from './actions';
 import * as productActions from './product-details/actions';
 import * as homeActions from './home/actions';
 import { Product } from './model/product';
+import { createReducer, on, Action} from '@ngrx/store';
 
 import { EntityAdapter, createEntityAdapter, EntityState } from '@ngrx/entity';
 
@@ -24,31 +25,19 @@ const initState: ProductState = {
 };
 
 export function reducer(
-  state: ProductState = initState,
-  action: actions.All | productActions.All | homeActions.All
-): ProductState {
-  switch (action.type) {
-    case homeActions.FETCH_PRODUCTS: {
-      return { ...state, isLoading: true };
-    }
-    case actions.FETCH_PRODUCTS_ERROR: {
-      return { ...state, isLoading: false };
-    }
-    case actions.FETCH_PRODUCTS_SUCCESS: {
-      return {
-        products: productAdapter.upsertMany(action.payload, state.products),
+  state: ProductState,
+  action: Action) {
+    return createReducer(
+      initState,
+      on(homeActions.fetchProducts, state => ({...state, isLoading: true })),
+      on(actions.fetchProductsError, state => ({...state, isLoading: false })),
+      on(actions.fetchProductsSuccess, (state, {products}) => ({
+        products: productAdapter.upsertMany(products, state.products),
         isLoading: false,
-      };
-    }
-
-    case productActions.FETCH_PRODUCT_SUCCESS: {
-      return {
+      })),
+      on(productActions.fetchProductSuccess, (state, {product}) => ({
         ...state,
-        products: productAdapter.upsertOne(action.payload, state.products),
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+        products: productAdapter.upsertOne(product, state.products),
+      })),
+      )(state, action);
 }

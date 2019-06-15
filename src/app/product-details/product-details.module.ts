@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCardModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatProgressBarModule } from '@angular/material';
 import { EffectsModule } from '@ngrx/effects';
 
 import { StarsModule } from '../common/stars/stars.module';
@@ -12,6 +12,7 @@ import { ProductDetailsComponent } from './product-details.component';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatProgressBarModule,
     MatCardModule,
     StarsModule,
     EffectsModule.forFeature([ProductEffects]),

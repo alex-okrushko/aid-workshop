@@ -1,7 +1,14 @@
 <mat-card *ngIf="product$ | async as product">
   <mat-card-title>{{product.title}}</mat-card-title>
   <mat-card-subtitle>{{product.price | currency}}</mat-card-subtitle>
-  <mat-card-content>{{product.description}}</mat-card-content>
+  <mat-card-content>
+    <ng-container *ngIf="product.description">{{product.description}}
+    </ng-container>
+    <mat-progress-bar
+      *ngIf="!product.description"
+      mode="indeterminate">
+    </mat-progress-bar>
+  </mat-card-content>
   <img [src]="product.url">
   <mat-card-actions>
     <app-stars

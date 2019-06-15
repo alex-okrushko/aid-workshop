@@ -16,10 +16,7 @@ export class ProductService {
 
   getProducts(): Observable<Product[]> {
     return defer(
-      () =>
-        Math.random() < 0.25
-          ? throwError('Internal Error')
-          : of(stripDescription(data)).pipe(delay(1 * 1000))
+      () => of(stripDescription(data)).pipe(delay(1 * 1000))
     );
   }
 

@@ -1,8 +1,3 @@
-import { Action } from '@ngrx/store';
+import { createAction } from '@ngrx/store';
 
-export const FETCH_PRODUCTS = '[Home Page] Fetch Products';
-export class FetchProducts implements Action {
-  readonly type = FETCH_PRODUCTS;
-}
-
-export type All = FetchProducts;
+export const fetchProducts = createAction('[Home Page] Fetch Products');
