@@ -1,0 +1,21 @@
+<mat-progress-bar
+  *ngIf="loading$ | async"
+  mode="indeterminate"></mat-progress-bar>
+
+<div
+  class="products-container"
+  *ngIf="products$ | async as products">
+  <a
+    class="card-link"
+    [routerLink]="['/details', product.id]"
+    *ngFor="let product of products">
+    <mat-card>
+      <mat-card-title>{{product.title}}</mat-card-title>
+      <img
+        class="thumbnail"
+        [src]="product.url">
+
+      <app-stars [rating]="product.rating"></app-stars>
+    </mat-card>
+  </a>
+</div>
